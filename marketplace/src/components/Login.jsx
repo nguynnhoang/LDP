@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ReactDOM from 'react-dom';
 import "bootstrap/dist/css/bootstrap.min.css"
+import './style.css'
 
 
 function Login(props) {
@@ -13,14 +14,14 @@ function Login(props) {
 
     const login = details => {
     
-        if(details.userID === state.userID && details.userPass === state.userPass) {
+        if(details.userID === "0xd7742733c8de87B55bB5388fC1015320BEaB9ce2" && details.userPass === state.userPass) {
           
-        //   this.setState({
-        //     ...this.state,
-        //     userID: details.userID,
-        //     userPass:details.userPass,
-        //     userEth: details.userEth || 100
-        //   })
+          this.setState({
+            ...this.state,
+            userID: details.userID,
+            userPass:details.userPass,
+            userEth: details.userEth || 100
+          })
         }
     
         else {
@@ -33,20 +34,19 @@ function Login(props) {
         e.preventDefault();
         console.log(details, 11111)
         LOGIN(details);
-        LOGIN(true);
     }
 
     
 
     return (
-        <form onSubmit={submitHandler}>
+        <form className="form" onSubmit={submitHandler}>
             <div className="form-inner">
-                <h2>Login</h2>
-                {
-                    (state.error !== "") ? (
-                        <div className="error">{state.error}</div>
+                <h2>Welcome to our market</h2>
+                {/* {
+                    (this.state.error !== "") ? (
+                        <div className="error">{this.state.error}</div>
                     ) : ""
-                }
+                } */}
                 <div className="form-group">
                     <label htmlFor="userID">Your ID: </label>
                     <input type="text" name="userID" id="userID" onChange={e => setDetails({...details, userID: e.target.value})} value={details.userID}/>

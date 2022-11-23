@@ -1,40 +1,45 @@
 import React, { Component } from 'react';
-
+import {TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper} from "@mui/material"
+import './style.css'
 class Main extends Component {
   render() {
     return (
       <div id="content">
-        <h1>Add Product</h1>
-        <ul>
+        
+        {/* <ul>
           <li className="text-nowrap d-none d-sm-none d-sm-block">
             <small className="text-black">ID: <span id="account">{this.props.account}</span></small>
           </li>
-        </ul>
+        </ul> */}
         <form onSubmit={(event) => {
           event.preventDefault()
           const name = this.productName.value
           const price = window.web3.utils.toWei(this.productPrice.value.toString(), 'Ether')
           this.props.createProduct(name, price)
-        }}>
-          <div className="form-group mr-sm-2">
-            <input
+        }} className="form">
+          <div className="form-inner">
+            <h3>Add Product</h3>
+            <div className="form-group mr-sm-2">
+              <label>Product name:</label>
+              <input
               id="productName"
               type="text"
               ref={(input) => { this.productName = input }}
               className="form-control"
-              placeholder="Product Name"
               required />
-          </div>
-          <div className="form-group mr-sm-2">
-            <input
+            </div>
+            <div className="form-group mr-sm-2">
+              <label>Product price:</label>
+              <input
               id="productPrice"
               type="text"
               ref={(input) => { this.productPrice = input }}
               className="form-control"
-              placeholder="Product Price"
               required />
+            </div>
+            <button type="submit" className="btn btn-primary">Add Product</button>
           </div>
-          <button type="submit" className="btn btn-primary">Add Product</button>
+          
         </form>
         <p>&nbsp;</p>
         <h2>Buy Product</h2>
@@ -59,6 +64,7 @@ class Main extends Component {
                   <td>
                     { !product.purchased
                       ? <button
+                          className="buy-btn"
                           name={product.id}
                           value={product.price}
                           onClick={(event) => {

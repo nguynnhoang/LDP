@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import Web3 from 'web3'
-import './App.css';
+import './style.css';
 import Marketplace from '../abis/Marketplace.json'
 import Navbar from './Navbar'
 import Main from './Main'
@@ -9,7 +9,7 @@ import Login from './Login'
 //import GeneralContext from '../context/generalProvider';
 import io from "socket.io-client";
 
-const socket = io.connect(`http://127.0.0.1:3009`);
+const socket = io.connect(`http://127.0.0.1:3001`);
 
 console.log(socket)
 
@@ -68,9 +68,9 @@ class App extends Component {
       productCount: 0,
       products: [],
       loading: true,
-      userID: "",
+      userID: "null",
       userPass: "buyer",
-      userEth: "100 ETH",
+      userEth: "",
       error: "!!!",
       isLogin: false
     }
@@ -99,25 +99,7 @@ class App extends Component {
   }
 
 
-  LOGIN(details) {
-    //console.log(this.state);
-    console.log(details.userID, details.userPass, 11111)
-
-    if(details.userID === this.state.userID && details.userPass === this.state.userPass) {
-      
-      // this.setState({
-      //   ...this.state,
-      //   userID: details.userID,
-      //   userPass:details.userPass,
-      //   userEth: details.userEth || 100
-      // })
-    }
-
-    else {
-      console.log("Incorrect");
-      //this.setState("Incorrect");
-    }
-  }
+ 
 
 
 
@@ -130,11 +112,39 @@ class App extends Component {
   }
 
   render() {
-    const isLoginfunc = data => {
-      // this.setState({
-      //   isLogin: true
-      // })
-      console.log(data);
+    // const isLoginfunc = data => {
+    //   // this.setState({
+    //   //   isLogin: true
+    //   // })
+    //   console.log(data);
+    // }
+    
+    const LOGIN = async details => {
+      console.log(this.state);
+      
+      //console.log(details)
+      if(details.userID === "0xd7742733c8de87B55bB5388fC1015320BEaB9ce2" && details.userPass === this.state.userPass) {
+        const web3 = window.web3;
+        const accounts = await web3.eth.getAccounts();
+        const ethRemaining = await web3.eth.getBalance(accounts[0]);
+        
+
+        details.ethRemaining = Math.round(ethRemaining/1000000000000000000);
+      
+  
+        socket.emit("data-register", details)
+        this.setState({
+          ...this.state,
+          userID: details.userID,
+          userPass:details.userPass,
+          userEth: details.ethRemaining
+        })
+      }
+  
+      else {
+        
+        //this.setState("Incorrect");
+      }
     }
 
     return (
@@ -142,6 +152,22 @@ class App extends Component {
         <Navbar/>
         <div className="container-fluid mt-5">
           <div className="row">
+
+            <div className="login-wrapper col-lg-5">
+              {
+                (this.state.userID !== "null") ? (
+                  <div className='welcome'>
+                    <h2>Welcome, <span>{this.state.userID}</span></h2>
+                    <h4>Role: {this.state.userPass}</h4>
+                    <h4>Budget: {this.state.userEth}</h4>
+                    {this.state.isLogin && <button onClick={this.Logout}>Logout</button>}
+                  </div>
+                ): (
+                  <Login state={this.state} LOGIN={LOGIN} />
+                )
+              }
+            </div>
+
             <main role="main" className="col-lg-7">
               { this.state.loading
                 ? <div id="loader" className="text-center"><p className="text-center">Loading...</p></div>
@@ -152,18 +178,7 @@ class App extends Component {
                   purchaseProduct={this.purchaseProduct} />
               }
             </main>
-            <div className="col-lg-5">
-              {
-                (this.state.userID !== "") ? (
-                  <div>
-                    <h2>Welcome, <span>{this.state.userID}</span></h2>
-                    {this.state.isLogin && <button onClick={this.Logout}>Logout</button>}
-                  </div>
-                ): (
-                  <Login state={this.state} LOGIN={this.LOGIN} />
-                )
-              }
-            </div>
+
           </div>
         </div>
       </div>
