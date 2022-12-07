@@ -13,7 +13,7 @@ class Navbar extends Component {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Dapp University's Blockchain Marketplace
+          Logic Design Project - blockchain-based peer-to-peer energy trading platform
         </a>
         
       </nav>
