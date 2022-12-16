@@ -73,7 +73,8 @@ class App extends Component {
       userEth: "",
       error: "!!!",
       isLogin: false,
-      remainingEnergy: 100,
+      remainingEnergy: 0,
+      message: ""
     }
     
     this.createProduct = this.createProduct.bind(this)
@@ -99,18 +100,35 @@ class App extends Component {
     })
     this.setState({
       ...this.state,
-      userEth: this.userEth - price
+      userEth: this.userEth - price,
+      remainingEnergy: this.remainingEnergy + 1
     })
     //console.log(this.state.userEth, price, 111)
     
     const getEth = Number(localStorage.getItem('userEth')) - Number(price)/1000000000000000000
-    console.log(Number(localStorage.getItem('userEth')), Number(price), 555)
+    //console.log(Number(localStorage.getItem('userEth')), Number(price), 555)
     localStorage.setItem('userEth', getEth)
-    this.setState({
-      ...this.state,
-      userEth: getEth
-    })
-    //console.log(localStorage.getItem('userEth'), 1111 )
+    let remainingEnergy = localStorage.getItem('remainingEnergy')
+
+    //console.log(remainingEnergy, 5555)
+    if (remainingEnergy) {
+      localStorage.setItem('remainingEnergy', Number(remainingEnergy)+1)
+      this.setState({
+        ...this.state,
+        userEth: getEth,
+        remainingEnergy: remainingEnergy+1
+      })
+    }
+    else {
+      localStorage.setItem('remainingEnergy', Number(this.state.remainingEnergy)+1)
+      this.setState({
+        ...this.state,
+        userEth: getEth,
+        remainingEnergy: remainingEnergy+1
+      })
+    }
+    console.log("logic design")
+    socket.emit("buy-more-energy", 20)
   }
 
 
@@ -133,7 +151,22 @@ class App extends Component {
     //   // })
     //   console.log(data);
     // }
+    socket.on("EnergyRemaining", (data) => {
+      console.log("remaining energy")
+      this.setState({
+        ...this.state,
+        remainingEnergy: data
+      })
+      localStorage.setItem('remainingEnergy', data)
+    })
 
+    socket.on("out-of-energy", (data) => {
+      console.log("out of energy")
+      this.setState({
+        ...this.state,
+        message: data
+      })
+    })
     
     const LOGIN = async details => {
       //console.log(this.state);
@@ -162,7 +195,7 @@ class App extends Component {
           userPass:details.userPass,
           userEth: details.ethRemaining
         })
-        console.log(details.ethRemaining, 222)
+        //console.log(details.ethRemaining, 222)
         localStorage.setItem('userID', details.userID)
         localStorage.setItem('userPass', details.userPass)
         localStorage.setItem('userEth', details.ethRemaining)
@@ -188,8 +221,9 @@ class App extends Component {
                     <h2>Welcome, <span>{localStorage.getItem('userID')}</span></h2>
                     <h4>Role: {localStorage.getItem('userPass')}</h4>
                     <h4>Budget: {localStorage.getItem('userEth')}</h4>
-                    <h4>Remaining energy: {localStorage.getItem('remainingEnergy') || 100}</h4>
-                    {this.state.isLogin && <button onClick={this.Logout}>Logout</button>}
+                    <h4>Remaining energy: {localStorage.getItem('remainingEnergy')}</h4>
+                    {this.state.message && <h4>{this.state.message}</h4>}
+                    {/* {this.state.isLogin && <button onClick={this.Logout}>Logout</button>} */}
                   </div>
                 ): (
                   <Login state={this.state} LOGIN={LOGIN} />
