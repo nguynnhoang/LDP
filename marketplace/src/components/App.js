@@ -112,19 +112,19 @@ class App extends Component {
 
     //console.log(remainingEnergy, 5555)
     if (remainingEnergy) {
-      localStorage.setItem('remainingEnergy', Number(remainingEnergy)+1)
+      localStorage.setItem('remainingEnergy', Number(remainingEnergy)+100)
       this.setState({
         ...this.state,
         userEth: getEth,
-        remainingEnergy: remainingEnergy+1
+        remainingEnergy: remainingEnergy+100
       })
     }
     else {
-      localStorage.setItem('remainingEnergy', Number(this.state.remainingEnergy)+1)
+      localStorage.setItem('remainingEnergy', Number(this.state.remainingEnergy)+100)
       this.setState({
         ...this.state,
         userEth: getEth,
-        remainingEnergy: remainingEnergy+1
+        remainingEnergy: remainingEnergy+100
       })
     }
     console.log("logic design")
