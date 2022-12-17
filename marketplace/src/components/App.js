@@ -127,11 +127,12 @@ class App extends Component {
         remainingEnergy: remainingEnergy+100
       })
     }
+    setTimeout(() => this.state({show: true}), 5000)
     console.log("logic design")
     socket.emit("buy-more-energy", 20)
   }
 
-
+  
  
 
 
@@ -221,7 +222,7 @@ class App extends Component {
                     <h2>Welcome, <span>{localStorage.getItem('userID')}</span></h2>
                     <h4>Role: {localStorage.getItem('userPass')}</h4>
                     <h4>Budget: {localStorage.getItem('userEth')}</h4>
-                    <h4>Remaining energy: {localStorage.getItem('remainingEnergy')}</h4>
+                    {show && <h4>Remaining energy: {localStorage.getItem('remainingEnergy')}</h4>}
                     {this.state.message && <h4>{this.state.message}</h4>}
                     {/* {this.state.isLogin && <button onClick={this.Logout}>Logout</button>} */}
                   </div>
