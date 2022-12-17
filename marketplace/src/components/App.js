@@ -98,11 +98,11 @@ class App extends Component {
     .once('receipt', (receipt) => {
       this.setState({ loading: false })
     })
-    this.setState({
-      ...this.state,
-      userEth: this.userEth - price,
-      remainingEnergy: this.remainingEnergy + 1
-    })
+    // this.setState({
+    //   ...this.state,
+    //   userEth: this.userEth - price,
+    //   remainingEnergy: this.remainingEnergy + 1
+    // })
     //console.log(this.state.userEth, price, 111)
     
     const getEth = Number(localStorage.getItem('userEth')) - Number(price)/1000000000000000000
@@ -127,7 +127,7 @@ class App extends Component {
         remainingEnergy: remainingEnergy+100
       })
     }
-    setTimeout(() => this.state({show: true}), 5000)
+    
     console.log("logic design")
     socket.emit("buy-more-energy", 20)
   }
@@ -222,7 +222,7 @@ class App extends Component {
                     <h2>Welcome, <span>{localStorage.getItem('userID')}</span></h2>
                     <h4>Role: {localStorage.getItem('userPass')}</h4>
                     <h4>Budget: {localStorage.getItem('userEth')}</h4>
-                    {show && <h4>Remaining energy: {localStorage.getItem('remainingEnergy')}</h4>}
+                    <h4>Remaining energy: {localStorage.getItem('remainingEnergy')}</h4>
                     {this.state.message && <h4>{this.state.message}</h4>}
                     {/* {this.state.isLogin && <button onClick={this.Logout}>Logout</button>} */}
                   </div>
